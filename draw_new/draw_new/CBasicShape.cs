@@ -50,13 +50,6 @@ namespace draw_new
 
                 Canvas.SetLeft(thumb, left);
                 Canvas.SetTop(thumb, top);
-                thumb.AllowDrop = true;
-                UpdateLines(thumb);
-            }
-            else
-            {
-                thumb.AllowDrop = false;
-                UpdateLines(thumb);
             }
         }
         protected Point _startPoint;
@@ -81,17 +74,6 @@ namespace draw_new
                 _endPoint = value;
                 _isMoving = true;
             }
-        }
-        protected static void UpdateLines(MyThumb thumb)
-        {
-            var left = Canvas.GetLeft(thumb);
-            var top = Canvas.GetTop(thumb);
-
-            foreach (var line in thumb.StartLines)
-                line.StartPoint = new Point(left + thumb.ActualWidth / 2, top + thumb.ActualHeight / 2);
-
-            foreach (var line in thumb.EndLines)
-                line.EndPoint = new Point(left + thumb.ActualWidth / 2, top + thumb.ActualHeight / 2);
         }
     }
 }

@@ -6,13 +6,11 @@ namespace draw_new
 {
   public class MyThumb : Thumb
   {
-      public List<CBasicShape> EndLines { get; private set; }
-      public List<CBasicShape> StartLines { get; private set; }
+      public int _id;
 
     public MyThumb()
     {
-        StartLines = new List<CBasicShape>();
-        EndLines = new List<CBasicShape>();
+        _id = -1;
     }
   }
 }
