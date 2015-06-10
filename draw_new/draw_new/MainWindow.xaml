@@ -1,0 +1,63 @@
+﻿<Window x:Class="draw_new.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:my="clr-namespace:draw_new"
+        Title="Рисование" Height="607.4" Width="740" Background="#FFE2E2E2">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ControlTemplate x:Key="template1">
+                <StackPanel>
+                    <!--<my:CShape Name="tplRectangle"  />-->
+                    <Rectangle Name="tplRectangle" />
+                </StackPanel>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="0,0,-0.4,0.4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Viewbox Grid.Row="0" HorizontalAlignment="Left" Grid.ColumnSpan="2"   MaxHeight="500" MaxWidth="730">
+            <!--MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseDown="canvas_MouseDown"  MouseMove="canvas_MouseMove" MouseLeftButtonUp="canvas_MouseLeftButtonUp"-->
+            <Canvas x:Name="canvas"   Background="White" Margin="10,10,9.4,9.2"  MouseMove="canvas_MouseMove" MouseLeftButtonUp="canvas_MouseLeftButtonUp" Grid.RowSpan="1" Grid.ColumnSpan="2" Height="480" Width="720" ClipToBounds="True" />
+        </Viewbox>
+        <Button x:Name="but_clear" Content="Очистить"    Click="but_clear_Click" Margin="20,17.8,252.2,20.6" Grid.Row="1" MaxHeight="50" MaxWidth="200" />
+        <!--<GroupBox Margin="131,494,26.2,0.6" Grid.RowSpan="2" >
+            <StackPanel>
+                <RadioButton x:Name="rb_shape" Content="Прямоугольник" IsChecked="True" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="198" Margin="0,10,-0.4,0"/>
+                <RadioButton x:Name="rb_line" Content="Связь" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="198" Margin="0,20,-0.4,0"/>
+            </StackPanel>
+        </GroupBox>-->
+        <GroupBox Margin="346,494,243.4,0.6" Grid.RowSpan="2" Grid.ColumnSpan="2" >
+            <StackPanel>
+                <RadioButton x:Name="rb_full" Content="Сплошная" IsChecked="True" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="133" Margin="0,10,-0.2,0"/>
+                <RadioButton x:Name="rb_dotted" Content="Пунктирная" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="133" Margin="0,20,-0.2,0"/>
+            </StackPanel>
+        </GroupBox>
+        <!--<GroupBox Margin="128.8,495,28.4,-0.4" Grid.Column="1" Grid.RowSpan="2" >
+            <StackPanel>
+        <RadioButton x:Name="rb_moving" Content="Перемещение" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="103"/>
+        <RadioButton x:Name="rb_draw_new" Content="Рисовать" IsChecked="True" Grid.Column="1" HorizontalAlignment="Left" Margin="0,20,0,0" Grid.Row="1" VerticalAlignment="Top" Width="103"/>
+        </StackPanel>
+        </GroupBox>-->
+        <Button x:Name="but_rec" Content="Прямоугольник"    Margin="120,18.8,150.2,19.6" Grid.Row="1" MaxHeight="50" MaxWidth="200"  Click="but_rec_Click"/>
+        <Button x:Name="but_arrow" Content="Стрелка"     Margin="222,18.8,48.2,19.6" Grid.Row="1" MaxHeight="50" MaxWidth="200" Click="but_arrow_Click" />
+        <TextBlock x:Name="txt_test_" Grid.Column="1" HorizontalAlignment="Left" Margin="230.8,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="43" Width="112">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.607"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
+    </Grid>
+    
+</Window>    
