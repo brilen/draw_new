@@ -28,11 +28,12 @@ namespace draw_new
         MyThumb _startThumb;
         MyThumb _finishThumb;
         CShape _objectNew;
-        private Point _currentPosition;
-        private Point _startPointLine;
-        //List<CLine> _startLine = new List<CLine>();
-        //List<CLine> _endLine = new List<CLine>();
+        List<CLine> _allLine = new List<CLine>();
+        List<MyThumb> _startShape = new List<MyThumb>();
+        List<MyThumb> _endShape = new List<MyThumb>();
         List<CShape> _listShape = new List<CShape>();
+        MyThumb _movingThumb;
+        int count = 0;
 
         public MainWindow()
         {
@@ -51,7 +52,7 @@ namespace draw_new
             if (_isDrawingShape == true)
             {
                 
-                 _objectNew = new CShape();
+                _objectNew = new CShape();
                 _objectNew._isMoving = true;
                 _objectNew.MyCanvas = this.canvas;
                 if (rb_full.IsChecked == true)
@@ -66,39 +67,47 @@ namespace draw_new
                 }
 
                 _objectNew.Draw(e.GetPosition(this));
+               
                 Mouse.OverrideCursor = null;
             }
             else if (_isDrawingLine == true)
             {
                 _startThumb = e.Source as MyThumb;
-                _currentPosition = e.GetPosition(canvas);
-                //Panel.SetZIndex(_startThumb, 2);
-                _LineNew = new CLine();
-                if (_listShape != null)
+                if (_startThumb != null)
                 {
-                    foreach (CShape _object in _listShape)
+                    count++;
+                    _startThumb._id = count;
+                    _startShape.Add(_startThumb);
+                    _LineNew = new CLine();
+                    if (_listShape != null)
                     {
-                        _object._isMoving = false;
+                        foreach (CShape _object in _listShape)
+                        {
+                            _object._isMoving = false;
+                        }
                     }
-                }
-                _LineNew.MyCanvas = this.canvas;
-                if (rb_full.IsChecked == true)
-                {
-                    _LineNew.TypeLine = new DoubleCollection() { 1, 0 };
-                }
-                else
-                {
-                    _LineNew.TypeLine = new DoubleCollection() { 1, 2 };
-                }
+                    _LineNew.MyCanvas = this.canvas;
+                    if (rb_full.IsChecked == true)
+                    {
+                        _LineNew.TypeLine = new DoubleCollection() { 1, 0 };
+                    }
+                    else
+                    {
+                        _LineNew.TypeLine = new DoubleCollection() { 1, 2 };
+                    }
 
-                _LineNew.StartPoint = (_startThumb != null) ? new Point(Canvas.GetLeft(_startThumb), Canvas.GetTop(_startThumb)) : _currentPosition;
-                _startPointLine = _LineNew.StartPoint;
-                txt_test_.Text = _LineNew.StartPoint.ToString();
+                    //_LineNew.StartPoint = (_startThumb != null) ? new Point(Canvas.GetLeft(_startThumb), Canvas.GetTop(_startThumb)) : _currentPosition;
+                    _LineNew.StartPoint = new Point(Canvas.GetLeft(_startThumb), Canvas.GetTop(_startThumb));
 
-                _LineNew.EndPoint = _LineNew.StartPoint;
-                _LineNew.Draw();
-                //if (_startThumb != null) { _startThumb.StartLines.Add(_LineNew); }
+                    _LineNew.EndPoint = _LineNew.StartPoint;
+                    _LineNew.Draw();
 
+                    _startShape.Add(_startThumb);
+                }
+            }
+            if (_isDrawingLine == false && _isDrawingShape == false)
+            {
+                _movingThumb = e.Source as MyThumb;
             }
 
         }
@@ -108,6 +117,7 @@ namespace draw_new
             Mouse.OverrideCursor = Cursors.SizeAll;
             _isDrawingShape = true;
             _isDrawingLine = false;
+            count = 0;
             
         }
 
@@ -121,23 +131,29 @@ namespace draw_new
         {
             if (_isDrawingLine)
             {
-            _finishThumb = e.Source as MyThumb;
-            _LineNew.EndPoint = (_finishThumb != null) ? new Point(Canvas.GetLeft(_finishThumb), Canvas.GetTop(_finishThumb)) : e.GetPosition(canvas);
-            //if (_finishThumb != null && _LineNew != null)
-            //{
-            //    _finishThumb.EndLines.Add(_LineNew);
-            //}
-            Mouse.OverrideCursor = null;
-            _isDrawingLine = false;
-            if (_listShape != null)
-            {
-                foreach (CShape _object in _listShape)
+                _finishThumb = e.Source as MyThumb;
+                if (_finishThumb != null)
                 {
-                    _object._isMoving = true;
+                    count++;
+                    _finishThumb._id = count;
+                    _endShape.Add(_finishThumb);
+                    _LineNew.EndPoint = new Point(Canvas.GetLeft(_finishThumb), Canvas.GetTop(_finishThumb));
+                    _LineNew.Draw();
+                    _allLine.Add(_LineNew);
+                    _endShape.Add(_finishThumb);
+                    Mouse.OverrideCursor = null;
+                    _isDrawingLine = false;
+                    if (_listShape != null)
+                    {
+                        foreach (CShape _object in _listShape)
+                        {
+                            _object._isMoving = true;
+                        }
+                    }
                 }
             }
-            }
-            else if (_isDrawingShape) {
+            else if (_isDrawingShape)
+            {
                 _listShape.Add(_objectNew);
                 _isDrawingShape = false;
             }
@@ -145,13 +161,49 @@ namespace draw_new
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine == true)
+
+            if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine == true && _LineNew != null)
             {
-                _LineNew.StartPoint = _startPointLine;
                 _LineNew.EndPoint = e.GetPosition(canvas);
-                txt_test_.Text = _LineNew.EndPoint.ToString();
+                txt_test_.Text = _LineNew.StartPoint.ToString();
                 _LineNew.Draw();
 
+            }
+            if (_LineNew != null || _finishThumb == null || _startThumb == null)
+            {
+                canvas.Children.Remove(_LineNew);
+
+            }
+            if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine == false && _isDrawingShape == false)
+            {
+
+                if (_movingThumb != null && _movingThumb._id != -1)
+                {
+                    foreach (MyThumb _object in _endShape)
+                    {
+                        if (_movingThumb._id == _object._id)
+                        {
+                            foreach (CLine _line in _allLine)
+                            {
+                                _line.EndPoint = new Point(Canvas.GetLeft(_movingThumb), Canvas.GetTop(_movingThumb));
+                                _line.Draw();
+                            }
+                        }
+                        
+                    }
+                    foreach (MyThumb _object in _startShape)
+                    {
+                        if (_movingThumb._id == _object._id)
+                        {
+                            foreach (CLine _line in _allLine)
+                            {
+                                _line.StartPoint = new Point(Canvas.GetLeft(_movingThumb), Canvas.GetTop(_movingThumb));
+                                _line.Draw();
+                            }
+                        }
+
+                    }
+                }
             }
         }
 
