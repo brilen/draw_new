@@ -45,6 +45,7 @@ namespace draw_new
         private void but_clear_Click(object sender, RoutedEventArgs e)
         {
             canvas.Children.Clear();
+            count = 0;
         }
    
         private void MainWindowPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -117,7 +118,7 @@ namespace draw_new
             Mouse.OverrideCursor = Cursors.SizeAll;
             _isDrawingShape = true;
             _isDrawingLine = false;
-            count = 0;
+            
             
         }
 
@@ -169,7 +170,7 @@ namespace draw_new
                 _LineNew.Draw();
 
             }
-            if (_LineNew != null || _finishThumb == null || _startThumb == null)
+            if (_LineNew != null && ( _finishThumb == null || _startThumb == null))
             {
                 canvas.Children.Remove(_LineNew);
 
