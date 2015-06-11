@@ -178,7 +178,7 @@ namespace draw_new
             if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine == false && _isDrawingShape == false)
             {
 
-                if (_movingThumb != null && _movingThumb._id != -1)
+                if (_movingThumb != null && _movingThumb._id != -1 && _allLine.Count>0)
                 {
                     foreach (MyThumb _object in _endShape)
                     {
@@ -190,7 +190,7 @@ namespace draw_new
                                 _line.Draw();
                             }
                         }
-                        
+
                     }
                     foreach (MyThumb _object in _startShape)
                     {
