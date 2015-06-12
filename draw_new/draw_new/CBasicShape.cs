@@ -9,7 +9,7 @@ using System.Windows.Controls.Primitives;
 
 namespace draw_new
 {
-    public abstract class CBasicShape : FrameworkElement
+    public abstract class CBasicShape
     {
         
         protected DoubleCollection _typeLine;
