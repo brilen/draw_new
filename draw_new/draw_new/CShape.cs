@@ -12,24 +12,28 @@ namespace draw_new
         protected Brush _color;
         public Rectangle _baseShape;
         private MyThumb _newThumb;
+        public bool _isMoving = false;
         
-
         public CShape()
         {
             _baseShape = new Rectangle();
             _newThumb = new MyThumb();
         }
 
-        public Brush Color
+        protected void OnDragDelta(object sender, DragDeltaEventArgs e)
         {
-            get { return _color; }
-            set
+            var thumb = e.Source as MyThumb;
+            if (_isMoving)
             {
-                _color = value;
+                var left = Canvas.GetLeft(thumb) + e.HorizontalChange;
+                var top = Canvas.GetTop(thumb) + e.VerticalChange;
+
+                Canvas.SetLeft(thumb, left);
+                Canvas.SetTop(thumb, top);
             }
         }
 
-        public void Draw(Point position)
+        public override void Draw()
         {
             _newThumb.Template = ((MainWindow)System.Windows.Application.Current.MainWindow).Resources["template1"] as ControlTemplate;
             _newThumb.ApplyTemplate();
@@ -44,9 +48,10 @@ namespace draw_new
             _baseShape.Fill = _color;
             _baseShape.StrokeDashArray = new DoubleCollection(_typeLine);
 
-            Canvas.SetLeft(_newThumb, position.X);
-            Canvas.SetTop(_newThumb, position.Y);
+            Canvas.SetLeft(_newThumb, _startPoint.X);
+            Canvas.SetTop(_newThumb, _startPoint.Y);
 
+            //Обеспечивает правильное обновление всех визуальных дочерних элементов данного элемента
             _newThumb.UpdateLayout();
         }
         

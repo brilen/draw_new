@@ -8,7 +8,7 @@
             <ControlTemplate x:Key="template1">
                 <StackPanel>
                     <!--<my:CShape Name="tplRectangle"  />-->
-                    <Rectangle Name="tplRectangle" />
+                    <Rectangle Name="tplRectangle"/>
                 </StackPanel>
             </ControlTemplate>
         </ResourceDictionary>
@@ -47,16 +47,6 @@
         </GroupBox>-->
         <Button x:Name="but_rec" Content="Прямоугольник"    Margin="120,18.8,150.2,19.6" Grid.Row="1" MaxHeight="50" MaxWidth="200"  Click="but_rec_Click"/>
         <Button x:Name="but_arrow" Content="Стрелка"     Margin="222,18.8,48.2,19.6" Grid.Row="1" MaxHeight="50" MaxWidth="200" Click="but_arrow_Click" />
-        <TextBlock x:Name="txt_test_" Grid.Column="1" HorizontalAlignment="Left" Margin="230.8,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="43" Width="112">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.607"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform>
-        </TextBlock>
 
     </Grid>
     

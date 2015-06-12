@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
 namespace draw_new
 {
     class CLine : CBasicShape
     {
         public Line _myLine;
+        protected Point _endPoint;        
                 
         public CLine()
         {
             _myLine = new Line();
-            _myLine.Stroke = Brushes.Black;
-            _myLine.StrokeThickness = 2;
+
         }
 
-        public void Draw()
+        public override void Draw()
         {
             _myLine.StrokeDashArray = new DoubleCollection(_typeLine);
             _myCanvas.Children.Remove(_myLine);
@@ -37,6 +34,13 @@ namespace draw_new
 
         }
 
-        
+        public Point EndPoint
+        {
+            get { return _endPoint; }
+            set
+            {
+                _endPoint = value;
+            }
+        }
     }
 }

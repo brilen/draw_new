@@ -14,8 +14,7 @@ namespace draw_new
         
         protected DoubleCollection _typeLine;
         public Canvas _myCanvas;
-        public bool _isMoving = false;
-        
+                
         protected CBasicShape()
         {}
 
@@ -29,31 +28,8 @@ namespace draw_new
         }
 
 
-
-        public DoubleCollection TypeLine
-        {
-            get { return _typeLine; }
-            set
-            {
-                _typeLine = value;
-            }
-        }
-
-
-        protected void OnDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            var thumb = e.Source as MyThumb;
-            if (_isMoving)
-            {
-                var left = Canvas.GetLeft(thumb) + e.HorizontalChange;
-                var top = Canvas.GetTop(thumb) + e.VerticalChange;
-
-                Canvas.SetLeft(thumb, left);
-                Canvas.SetTop(thumb, top);
-            }
-        }
         protected Point _startPoint;
-        protected Point _endPoint;
+        
 
         public Point StartPoint
         {
@@ -61,19 +37,10 @@ namespace draw_new
             set
             {
                 _startPoint = value;
-                _isMoving = false;
             }
         }
+    
 
-
-        public Point EndPoint
-        {
-            get { return _endPoint; }
-            set
-            {
-                _endPoint = value;
-                _isMoving = true;
-            }
-        }
+        public abstract void Draw();
     }
 }
