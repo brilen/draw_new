@@ -135,7 +135,7 @@ namespace draw_new
             if (_isDrawingLine)
             {
                 _finishThumb = e.Source as MyThumb;
-                if (_finishThumb != null)
+                if (_finishThumb != null && _LineNew != null)
                 {
                     var x = Canvas.GetLeft(_finishThumb) + _finishThumb.ActualWidth / 2;
                     var y = Canvas.GetTop(_finishThumb) + _finishThumb.ActualHeight / 2;
