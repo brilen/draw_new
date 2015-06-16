@@ -15,9 +15,6 @@ namespace draw_new
         protected DoubleCollection _typeLine;
         public Canvas _myCanvas;
                 
-        protected CBasicShape()
-        {}
-
         public Canvas MyCanvas
         {
             get { return _myCanvas; }
