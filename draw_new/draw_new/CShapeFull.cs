@@ -7,7 +7,7 @@ namespace draw_new
     {
         public CShapeFull(){
             _color = Brushes.Coral;
-            _typeLine = new DoubleCollection() { 1, 0 };
+            TypeLine = new DoubleCollection() { 1, 0 };
     }
     }
 }

@@ -23,7 +23,7 @@ namespace draw_new
         protected void OnDragDelta(object sender, DragDeltaEventArgs e)
         {
             var thumb = e.Source as MyThumb;
-            if (_isMoving)
+            if (_isMoving && thumb != null)
             {
                 var left = Canvas.GetLeft(thumb) + e.HorizontalChange;
                 var top = Canvas.GetTop(thumb) + e.VerticalChange;
@@ -33,26 +33,29 @@ namespace draw_new
             }
         }
 
-        public override void Draw()
+        public override void Draw(Canvas myCanvas)
         {
-            _newThumb.Template = ((MainWindow)System.Windows.Application.Current.MainWindow).Resources["template1"] as ControlTemplate;
-            _newThumb.ApplyTemplate();
-            _newThumb.DragDelta += OnDragDelta;
-            _myCanvas.Children.Add(_newThumb);
+            if (myCanvas != null)
+            {
+                _newThumb.Template = ((MainWindow)System.Windows.Application.Current.MainWindow).Resources["template1"] as ControlTemplate;
+                _newThumb.ApplyTemplate();
+                _newThumb.DragDelta += OnDragDelta;
+                myCanvas.Children.Add(_newThumb);
 
-            _baseShape = (Rectangle)_newThumb.Template.FindName("tplRectangle", _newThumb);
-            _baseShape.Stroke = Brushes.Black;
-            _baseShape.Height = 80;
-            _baseShape.Width = 120;
-            _baseShape.StrokeThickness = 2;
-            _baseShape.Fill = _color;
-            _baseShape.StrokeDashArray = new DoubleCollection(_typeLine);
+                _baseShape = (Rectangle)_newThumb.Template.FindName("tplRectangle", _newThumb);
+                _baseShape.Stroke = Brushes.Black;
+                _baseShape.Height = 80;
+                _baseShape.Width = 120;
+                _baseShape.StrokeThickness = 2;
+                _baseShape.Fill = _color;
+                _baseShape.StrokeDashArray = new DoubleCollection(TypeLine);
 
-            Canvas.SetLeft(_newThumb, _startPoint.X);
-            Canvas.SetTop(_newThumb, _startPoint.Y);
+                Canvas.SetLeft(_newThumb, StartPoint.X);
+                Canvas.SetTop(_newThumb, StartPoint.Y);
 
-            //Обеспечивает правильное обновление всех визуальных дочерних элементов данного элемента
-            _newThumb.UpdateLayout();
+                //Обеспечивает правильное обновление всех визуальных дочерних элементов данного элемента
+                _newThumb.UpdateLayout();
+            }
         }
         
    }

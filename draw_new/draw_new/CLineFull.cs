@@ -6,7 +6,7 @@ namespace draw_new
     {
         public CLineFull()
         {
-            _typeLine = new DoubleCollection() { 1, 0 };
+            TypeLine = new DoubleCollection() { 1, 0 };
         }
     }
 }

@@ -9,35 +9,13 @@ using System.Windows.Controls.Primitives;
 
 namespace draw_new
 {
-    public abstract class CBasicShape
+    public abstract class CBasicShape : FrameworkElement
     {
         
-        protected DoubleCollection _typeLine;
-        public Canvas _myCanvas;
-                
-        public Canvas MyCanvas
-        {
-            get { return _myCanvas; }
-            set
-            {
-                _myCanvas = value;
-            }
-        }
+        protected DoubleCollection TypeLine;
 
+        public Point StartPoint { get; set; }
 
-        protected Point _startPoint;
-        
-
-        public Point StartPoint
-        {
-            get { return _startPoint; }
-            set
-            {
-                _startPoint = value;
-            }
-        }
-    
-
-        public abstract void Draw();
+        public abstract void Draw(Canvas myCanvas);
     }
 }

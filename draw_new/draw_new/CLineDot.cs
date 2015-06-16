@@ -6,7 +6,7 @@ namespace draw_new
     {
         public CLineDot()
         {
-            _typeLine = new DoubleCollection() { 1, 2 };
+            TypeLine = new DoubleCollection() { 1, 2 };
         }
     }
 }
