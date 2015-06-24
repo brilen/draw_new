@@ -15,7 +15,8 @@ namespace draw_new
         protected DoubleCollection TypeLine;
 
         public Point StartPoint { get; set; }
+        public Point EndPoint { get; set; }
 
-        public abstract void Draw(Canvas myCanvas);
+        public abstract void Draw();
     }
 }

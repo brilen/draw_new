@@ -4,58 +4,42 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace draw_new
 {
-    class CShape : CBasicShape
+    public class CShape : CBasicShape
     {
-        protected Brush _color;
-        public Rectangle _baseShape;
-        private MyThumb _newThumb;
-        public bool _isMoving = false;
+        public List<CLine> StartShape { get; private set; }
+        public List<CLine> EndShape { get; private set; }
+        protected Brush Сolor;
+        private Rectangle _newRectangle;
         
         public CShape()
         {
-            _baseShape = new Rectangle();
-            _newThumb = new MyThumb();
+            _newRectangle = new Rectangle();
+            StartShape = new List<CLine>();
+            EndShape = new List<CLine>();
         }
 
-        protected void OnDragDelta(object sender, DragDeltaEventArgs e)
+        public Rectangle Rectangle
         {
-            var thumb = e.Source as MyThumb;
-            if (_isMoving && thumb != null)
-            {
-                var left = Canvas.GetLeft(thumb) + e.HorizontalChange;
-                var top = Canvas.GetTop(thumb) + e.VerticalChange;
-
-                Canvas.SetLeft(thumb, left);
-                Canvas.SetTop(thumb, top);
-            }
+            get { return _newRectangle; }
+            set { _newRectangle = value; }
         }
 
-        public override void Draw(Canvas myCanvas)
+        public override void Draw()
         {
-            if (myCanvas != null)
-            {
-                _newThumb.Template = ((MainWindow)System.Windows.Application.Current.MainWindow).Resources["template1"] as ControlTemplate;
-                _newThumb.ApplyTemplate();
-                _newThumb.DragDelta += OnDragDelta;
-                myCanvas.Children.Add(_newThumb);
+                _newRectangle.Stroke = Brushes.Black;
+                _newRectangle.Height = 80;
+                _newRectangle.Width = 120;
+                _newRectangle.StrokeThickness = 2;
+                _newRectangle.Fill = Сolor;
+                _newRectangle.StrokeDashArray = new DoubleCollection(TypeLine);
 
-                _baseShape = (Rectangle)_newThumb.Template.FindName("tplRectangle", _newThumb);
-                _baseShape.Stroke = Brushes.Black;
-                _baseShape.Height = 80;
-                _baseShape.Width = 120;
-                _baseShape.StrokeThickness = 2;
-                _baseShape.Fill = _color;
-                _baseShape.StrokeDashArray = new DoubleCollection(TypeLine);
-
-                Canvas.SetLeft(_newThumb, StartPoint.X);
-                Canvas.SetTop(_newThumb, StartPoint.Y);
-
-                //Обеспечивает правильное обновление всех визуальных дочерних элементов данного элемента
-                _newThumb.UpdateLayout();
-            }
+                Canvas.SetLeft(_newRectangle, StartPoint.X);
+                Canvas.SetTop(_newRectangle, StartPoint.Y);
         }
         
    }

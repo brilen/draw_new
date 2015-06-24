@@ -7,22 +7,22 @@ using System.Windows.Controls.Primitives;
 
 namespace draw_new
 {
-    class CLine : CBasicShape
+    public class CLine : CBasicShape
     {
-        public Line _myLine;
+        private Line _myLine;
         
         public CLine()
         {
             _myLine = new Line();
 
         }
-
-        public override void Draw(Canvas myCanvas)
+        public Line Line
         {
-            if (myCanvas != null)
-            {
+            get { return _myLine; }
+        }
+        public override void Draw()
+        {
                 _myLine.StrokeDashArray = new DoubleCollection(TypeLine);
-                myCanvas.Children.Remove(_myLine);
                 _myLine.X1 = StartPoint.X;
                 _myLine.Y1 = StartPoint.Y;
 
@@ -31,11 +31,8 @@ namespace draw_new
 
                 _myLine.Stroke = Brushes.Black;
                 _myLine.StrokeThickness = 2;
-
-                myCanvas.Children.Add(_myLine);
-            }
         }
 
-        public Point EndPoint { get; set;}
+        
     }
 }

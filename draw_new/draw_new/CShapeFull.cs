@@ -6,7 +6,7 @@ namespace draw_new
     class CShapeFull : CShape
     {
         public CShapeFull(){
-            _color = Brushes.Coral;
+            Сolor = Brushes.Coral;
             TypeLine = new DoubleCollection() { 1, 0 };
     }
     }
