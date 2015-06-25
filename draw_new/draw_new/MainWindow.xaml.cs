@@ -26,9 +26,9 @@ namespace draw_new
         private bool _isDrawingLine;
         private bool _isMoving;
         private Rectangle _movingRectangle;
-        private CShape _startShape = new CShape();
-        private CShape _finishShape = new CShape();
-        private CShape _movingShape = new CShape();
+        private CShape _startShape;
+        private CShape _finishShape;
+        private CShape _movingShape;
         private CLine _lineNew;
         private CShape _shapeNew;
         List<CLine> _listLine = new List<CLine>();
