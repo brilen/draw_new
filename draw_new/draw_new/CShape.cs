@@ -15,7 +15,7 @@ namespace draw_new
         public List<CLine> EndShape { get; private set; }
         protected Brush Сolor;
         private Rectangle _newRectangle;
-        
+
         public CShape()
         {
             _newRectangle = new Rectangle();
@@ -31,16 +31,16 @@ namespace draw_new
 
         public override void Draw()
         {
-                _newRectangle.Stroke = Brushes.Black;
-                _newRectangle.Height = 80;
-                _newRectangle.Width = 120;
-                _newRectangle.StrokeThickness = 2;
-                _newRectangle.Fill = Сolor;
-                _newRectangle.StrokeDashArray = new DoubleCollection(TypeLine);
+            _newRectangle.Stroke = Brushes.Black;
+            _newRectangle.Height = 80;
+            _newRectangle.Width = 120;
+            _newRectangle.StrokeThickness = 2;
+            _newRectangle.Fill = Сolor;
+            _newRectangle.StrokeDashArray = new DoubleCollection(TypeLine);
 
-                Canvas.SetLeft(_newRectangle, StartPoint.X);
-                Canvas.SetTop(_newRectangle, StartPoint.Y);
+            Canvas.SetLeft(_newRectangle, StartPoint.X);
+            Canvas.SetTop(_newRectangle, StartPoint.Y);
         }
-        
-   }
+
+    }
 }

@@ -11,7 +11,7 @@ namespace draw_new
 {
     public abstract class CBasicShape : FrameworkElement
     {
-        
+
         protected DoubleCollection TypeLine;
 
         public Point StartPoint { get; set; }

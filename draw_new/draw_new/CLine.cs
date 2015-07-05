@@ -10,7 +10,7 @@ namespace draw_new
     public class CLine : CBasicShape
     {
         private Line _myLine;
-        
+
         public CLine()
         {
             _myLine = new Line();
@@ -22,17 +22,17 @@ namespace draw_new
         }
         public override void Draw()
         {
-                _myLine.StrokeDashArray = new DoubleCollection(TypeLine);
-                _myLine.X1 = StartPoint.X;
-                _myLine.Y1 = StartPoint.Y;
+            _myLine.StrokeDashArray = new DoubleCollection(TypeLine);
+            _myLine.X1 = StartPoint.X;
+            _myLine.Y1 = StartPoint.Y;
 
-                _myLine.X2 = EndPoint.X;
-                _myLine.Y2 = EndPoint.Y;
+            _myLine.X2 = EndPoint.X;
+            _myLine.Y2 = EndPoint.Y;
 
-                _myLine.Stroke = Brushes.Black;
-                _myLine.StrokeThickness = 2;
+            _myLine.Stroke = Brushes.Black;
+            _myLine.StrokeThickness = 2;
         }
 
-        
+
     }
 }

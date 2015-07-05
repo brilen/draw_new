@@ -2,7 +2,7 @@
 
 namespace draw_new
 {
-    class CLineFull: CLine
+    class CLineFull : CLine
     {
         public CLineFull()
         {

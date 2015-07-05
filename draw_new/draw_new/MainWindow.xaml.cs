@@ -21,10 +21,8 @@ namespace draw_new
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        private bool _isDrawingShape;
-        private bool _isDrawingLine;
-        private bool _isMoving;
+        enum EStates { IsDrawingShape, IsDrawingLine, IsMoving, Default };
+        private int _state = (int)EStates.Default;
         private Rectangle _movingRectangle;
         private CShape _startShape;
         private CShape _finishShape;
@@ -50,48 +48,54 @@ namespace draw_new
             _lineNew = null;
         }
 
+
         private void MainWindowPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
-            if (_isDrawingShape)
+            switch (_state)
             {
-                //рисование прямоугольника
-                bool? type = rb_dotted.IsChecked;
-                _shapeNew = NewShape(type);
-                _shapeNew.StartPoint = e.GetPosition(this);
-                _shapeNew.Draw();
-                canvas.Children.Add(_shapeNew.Rectangle);
+                case (int)EStates.IsDrawingShape:
+                    //рисование прямоугольника
+                    _shapeNew = NewShape();
+                    _shapeNew.StartPoint = e.GetPosition(this);
+                    _shapeNew.Draw();
+                    canvas.Children.Add(_shapeNew.Rectangle);
 
-                Mouse.OverrideCursor = null;
-            }
-            else if (_isDrawingLine && _lineNew == null)
-            {
-                _startShape = GetShape(e.Source as Rectangle);
-                if (_startShape != null)
-                {
-                    //начало рисования линии
-                    _finishShape = null;
-                    _lineNew = null;
+                    Mouse.OverrideCursor = null;
+                    break;
 
-                    bool? type = rb_dotted.IsChecked;
-                    _lineNew = NewLine(type);
-                    _lineNew.StartPoint = new Point(Canvas.GetLeft(_startShape.Rectangle) + _startShape.Rectangle.ActualWidth / 2, Canvas.GetTop(_startShape.Rectangle) + _startShape.Rectangle.ActualHeight / 2);
-                    _lineNew.EndPoint = _lineNew.StartPoint;
-                    _lineNew.Draw();
-                    canvas.Children.Add(_lineNew.Line);
-                }
-            }
-            if (_isDrawingLine == false && _isDrawingShape == false)
-            {
-                //получение фигуры, которую перемещают, для перерисоваки линий
-                _movingShape = GetShape(e.Source as Rectangle);
+                case (int)EStates.IsDrawingLine:
+                    if (_lineNew == null)
+                    {
+                        _startShape = GetShape(e.Source as Rectangle);
+                        if (_startShape != null)
+                        {
+                            //начало рисования линии
+                            _finishShape = null;
+                            _lineNew = null;
 
-                //начало перемещения прямоугольника
-                _movingRectangle = e.Source as Rectangle;
-                if (_movingRectangle != null)
-                {
-                    _isMoving = true;
-                }
+                            _lineNew = NewLine();
+
+                            double x = Canvas.GetLeft(_startShape.Rectangle) + _startShape.Rectangle.ActualWidth / 2;
+                            double y = Canvas.GetTop(_startShape.Rectangle) + _startShape.Rectangle.ActualHeight / 2;
+                            _lineNew.StartPoint = new Point(x, y);
+                            _lineNew.EndPoint = _lineNew.StartPoint;
+                            _lineNew.Draw();
+                            canvas.Children.Add(_lineNew.Line);
+                        }
+                    }
+                    break;
+                case (int)EStates.Default:
+                    //получение фигуры, которую перемещают, для перерисоваки линий
+                    _movingShape = GetShape(e.Source as Rectangle);
+
+                    //начало перемещения прямоугольника
+                    _movingRectangle = e.Source as Rectangle;
+                    if (_movingRectangle != null)
+                    {
+                        _state = (int)EStates.IsMoving;
+                    }
+                    break;
             }
 
         }
@@ -100,8 +104,7 @@ namespace draw_new
         private void but_draw_rectangle_Click(object sender, RoutedEventArgs e)
         {
             Mouse.OverrideCursor = Cursors.SizeAll;
-            _isDrawingShape = true;
-            _isDrawingLine = false;  
+            _state = (int)EStates.IsDrawingShape;
         }
 
         private void but_draw_arrow_Click(object sender, RoutedEventArgs e)
@@ -109,47 +112,56 @@ namespace draw_new
             if (_listShape.Count() > 1)
             {
                 Mouse.OverrideCursor = Cursors.Pen;
-                _isDrawingLine = true;
-                _isDrawingShape = false;
+                _state = (int)EStates.IsDrawingLine;
             }
         }
 
         private void MainWindowMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (_isDrawingLine)
+            switch (_state)
             {
-                _finishShape = GetShape(e.Source as Rectangle);
+                case (int)EStates.IsDrawingShape:
+                    //если рисовалась фигура
+                    _listShape.Add(_shapeNew);
+                    _state = (int)EStates.Default;
+                    break;
 
-                if (_startShape != null && _finishShape != null && _lineNew != null && _startShape != _finishShape)
-                {
-                    //перерисовка линий
-                    canvas.Children.Remove(_lineNew.Line);
-                    _lineNew.EndPoint = new Point(Canvas.GetLeft(_finishShape.Rectangle) + _finishShape.Rectangle.ActualWidth / 2, Canvas.GetTop(_finishShape.Rectangle) + _finishShape.Rectangle.ActualHeight / 2);
-                    _lineNew.Draw();
-                    canvas.Children.Add(_lineNew.Line);
+                case (int)EStates.IsDrawingLine:
+                    //если рисовалась линия
+                    _finishShape = GetShape(e.Source as Rectangle);
 
-                    AddLineToShape();
+                    if (_startShape != null && _finishShape != null && _lineNew != null && _startShape != _finishShape)
+                    {
+                        //перерисовка линий
+                        canvas.Children.Remove(_lineNew.Line);
 
-                    _listLine.Add(_lineNew);
+                        double x = Canvas.GetLeft(_finishShape.Rectangle) + _finishShape.Rectangle.ActualWidth / 2;
+                        double y = Canvas.GetTop(_finishShape.Rectangle) + _finishShape.Rectangle.ActualHeight / 2;
+                        _lineNew.EndPoint = new Point(x, y);
+                        _lineNew.Draw();
+                        canvas.Children.Add(_lineNew.Line);
 
-                    Mouse.OverrideCursor = null;
-                    _isDrawingLine = false;
+                        AddLineToShape();
 
-                    _startShape = null;
-                    _lineNew = null;
-                }
+                        _listLine.Add(_lineNew);
+
+                        Mouse.OverrideCursor = null;
+                        _state = (int)EStates.Default;
+
+                        _startShape = null;
+                        _lineNew = null;
+                    }
+                    break;
+                case (int)EStates.IsMoving:
+                    //если двигалась фигура
+                    _state = (int)EStates.Default;
+                    break;
             }
-            if (_isDrawingShape)
-            {
-                _listShape.Add(_shapeNew);
-                _isDrawingShape = false;
-            }
-            _isMoving = false;
         }
 
         private void MainWindowMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine && _lineNew != null && _finishShape == null)
+            if (e.LeftButton == MouseButtonState.Pressed && _state == (int)EStates.IsDrawingLine && _lineNew != null && _finishShape == null)
             {
                 //перерисовка линий
                 canvas.Children.Remove(_lineNew.Line);
@@ -159,46 +171,54 @@ namespace draw_new
 
             }
 
-            if (_isMoving)
+            if (e.LeftButton == MouseButtonState.Pressed && _state == (int)EStates.IsMoving)
             {
                 //задание новых координат прямоугольнику
-                _movingRectangle.SetValue(Canvas.LeftProperty, e.GetPosition(canvas).X -_movingRectangle.ActualWidth / 2);
+                _movingRectangle.SetValue(Canvas.LeftProperty, e.GetPosition(canvas).X - _movingRectangle.ActualWidth / 2);
                 _movingRectangle.SetValue(Canvas.TopProperty, e.GetPosition(canvas).Y - _movingRectangle.ActualHeight / 2);
-            }
-            if (e.LeftButton == MouseButtonState.Pressed && _isDrawingLine == false && _isDrawingShape == false)
-            {
-                //перерисовывка всех линии, связанных с данной прямоугольником
+
                 if (_movingShape != null && _listLine.Count > 0)
                 {
-                    foreach (CLine line in _movingShape.StartShape)
-                    {
-                        canvas.Children.Remove(line.Line);
-                        line.StartPoint = new Point(Canvas.GetLeft(_movingShape.Rectangle) + _movingShape.Rectangle.ActualWidth / 2, Canvas.GetTop(_movingShape.Rectangle) + _movingShape.Rectangle.ActualHeight / 2);
-                        line.Draw();
-                        canvas.Children.Add(line.Line);
-                    }
-                    foreach (CLine line in _movingShape.EndShape)
-                    {
-                        canvas.Children.Remove(line.Line);
-                        line.EndPoint = new Point(Canvas.GetLeft(_movingShape.Rectangle) + _movingShape.Rectangle.ActualWidth / 2, Canvas.GetTop(_movingShape.Rectangle) + _movingShape.Rectangle.ActualHeight / 2);
-                        line.Draw();
-                        canvas.Children.Add(line.Line);
-                    }
+                    RedrawLines();
                 }
             }
         }
 
 
-        private CShape GetShape (Rectangle rectangle)
+        private CShape GetShape(Rectangle rectangle)
         {
             //получение фигуры
-            foreach (CShape shape in _listShape){
+            foreach (CShape shape in _listShape)
+            {
                 if (shape.Rectangle == rectangle)
                 {
                     return shape;
                 }
             }
             return null;
+        }
+
+        private void RedrawLines()
+        {
+            //перерисовывка всех линии, связанных с данной прямоугольником
+            foreach (CLine line in _movingShape.StartShape)
+            {
+                canvas.Children.Remove(line.Line);
+                double x = Canvas.GetLeft(_movingShape.Rectangle) + _movingShape.Rectangle.ActualWidth / 2;
+                double y = Canvas.GetTop(_movingShape.Rectangle) + _movingShape.Rectangle.ActualHeight / 2;
+                line.StartPoint = new Point(x, y);
+                line.Draw();
+                canvas.Children.Add(line.Line);
+            }
+            foreach (CLine line in _movingShape.EndShape)
+            {
+                canvas.Children.Remove(line.Line);
+                double x = Canvas.GetLeft(_movingShape.Rectangle) + _movingShape.Rectangle.ActualWidth / 2;
+                double y = Canvas.GetTop(_movingShape.Rectangle) + _movingShape.Rectangle.ActualHeight / 2;
+                line.EndPoint = new Point(x, y);
+                line.Draw();
+                canvas.Children.Add(line.Line);
+            }
         }
 
         private void AddLineToShape()
@@ -210,34 +230,45 @@ namespace draw_new
                 {
                     shape.StartShape.Add(_lineNew);
                 }
-                else if (shape == _finishShape) {
+                else if (shape == _finishShape)
+                {
                     shape.EndShape.Add(_lineNew);
                 }
             }
         }
 
-        private CShape NewShape(bool? type)
+        private CShape NewShape()
         {
-            if (type.Value)
+            bool? type = rb_dotted.IsChecked;
+            if (type.HasValue)
             {
-                return new CShapeDot();
+                if (type.Value)
+                {
+                    return new CShapeDot();
+                }
+                else
+                {
+                    return new CShapeFull();
+                }
             }
-            else
-            {
-                return new CShapeFull();
-            }
+            return null;
         }
 
-        private CLine NewLine(bool? type)
+        private CLine NewLine()
         {
-            if (type.Value)
+            bool? type = rb_dotted.IsChecked;
+            if (type.HasValue)
             {
-                return new CLineDot();
+                if (type.Value)
+                {
+                    return new CLineDot();
+                }
+                else
+                {
+                    return new CLineFull();
+                }
             }
-            else
-            {
-                return new CLineFull();
-            }
+            return null;
         }
     }
 }
