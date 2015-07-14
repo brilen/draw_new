@@ -68,6 +68,7 @@
     <Compile Include="CShape.cs" />
     <Compile Include="CShapeDot.cs" />
     <Compile Include="CShapeFull.cs" />
+    <Compile Include="EStates.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
